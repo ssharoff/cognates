@@ -75,12 +75,29 @@ used to improve NLP tasks in a lesser resourced language.
 
 This is the list of embeddings for the shared Panslavonic space:
 
+(Czech) [http://corpus.leeds.ac.uk/serge/cognates/cs-300-panslav.vec.xz]
 
-The lists directory contains various dictionaries of cognates built from the shared Panslavonic space.  I keep the language pairs I experiment with.  If you want a pair for a specific language, I can probably produce it too.
+(English) [http://corpus.leeds.ac.uk/serge/cognates/en-300-panslav.vec.xz]
 
-As an example, a NER tagger covering Croatian, Czech, Polish, Russian, Slovene and Ukrainian has been built using the shared space.  It's simply a minor adaptation of a monolingual NER tagger framework [https://github.com/glample/tagger]
+(Croatian) [http://corpus.leeds.ac.uk/serge/cognates/hr-300-panslav.vec.xz]
+
+(Polish) [http://corpus.leeds.ac.uk/serge/cognates/pl-300-panslav.vec.xz]
+
+(Russian) [http://corpus.leeds.ac.uk/serge/cognates/ru-300-panslav.vec.xz]
+
+(Slovak) [http://corpus.leeds.ac.uk/serge/cognates/sk-300-panslav.vec.xz]
+
+(Slovene) [http://corpus.leeds.ac.uk/serge/cognates/sl-300-panslav.vec.xz]
+
+(Ukrainian) [http://corpus.leeds.ac.uk/serge/cognates/uk-300-panslav.vec.xz]
+
+
+The lists/ directory in this github contains various dictionaries of cognates built from the shared Panslavonic space.  I keep the language pairs I experiment with.  If you want a pair for a specific language, I can probably produce it too.
+
+As an example, a NER tagger covering Croatian, Czech, Polish, Russian, Slovak, Slovene and Ukrainian has been built using the shared space.  It's simply a minor adaptation of a monolingual NER tagger framework [https://github.com/glample/tagger]
 
 The tagger requires Theano and it can be run as:
 ```
 ./run-tagger.sh panslavonic input_file
 ```
+The input file can be in any language from the above list. 
