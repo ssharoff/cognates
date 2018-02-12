@@ -1,5 +1,5 @@
 import numpy as np
-from smallutils import myopen
+import smallutils as u
 
 class Space(object):
 
@@ -29,7 +29,9 @@ class Space(object):
                 xlen=len(x)
                 word = '~'.join(x[0:xlen+1-ncols])
                 
-                if i != 0 and xlen>=ncols and (lexicon is None or word in lexicon) and (threshold==0 or i<threshold):
+                if i != 0 and xlen>=ncols and (lexicon is None or word in lexicon) and (word[0].isalpha()) and (threshold==0 or i<threshold):
+                    if u.verbosity>4:
+                        print('Word %s has %d fields' % (word,xlen))
                     id2row.append(word)
                     word_length=len(word)
                     if (word_length>0):
@@ -37,12 +39,12 @@ class Space(object):
 
         #get the number of columns
         if not dim:
-            with myopen(fname,encoding='utf8') as f:
+            with u.myopen(fname,encoding='utf8') as f:
                 f.readline()
                 ncols = len(f.readline().split())
         else:
             ncols=dim+1
-        with myopen(fname,encoding='utf8') as f:
+        with u.myopen(fname,encoding='utf8') as f:
             m = np.matrix(np.loadtxt(filter_lines(f,ncols),
                           comments=None, usecols=range(0,ncols-1)))
 
