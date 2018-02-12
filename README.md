@@ -67,4 +67,20 @@ time python3 src/project_embeddings.py --orthogonal out/iten-300-fasttext.vec ou
 ```
 
 
-The embedding space which is shared across Slavonic languages is available from [https://github.com/ssharoff/panslavonic]
+# Shared Panslavonic embedding space for Language Adaptation
+
+Cognate detection is useful in the context of Language Adaptation,
+when an embedding space is shared across related languages and can be
+used to improve NLP tasks in a lesser resourced language.
+
+This is the list of embeddings for the shared Panslavonic space:
+
+
+The lists directory contains various dictionaries of cognates built from the shared Panslavonic space.  I keep the language pairs I experiment with.  If you want a pair for a specific language, I can probably produce it too.
+
+As an example, a NER tagger covering Croatian, Czech, Polish, Russian, Slovene and Ukrainian has been built using the shared space.  It's simply a minor adaptation of a monolingual NER tagger framework [https://github.com/glample/tagger]
+
+The tagger requires Theano and it can be run as:
+```
+./run-tagger.sh panslavonic input_file
+```
