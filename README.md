@@ -37,7 +37,7 @@ cross-lingual models, Dinu, et al, 2014,
 [http://clic.cimec.unitn.it/~georgiana.dinu/down/]
 and Artetxe, et al, 2016 [https://github.com/artetxem/vecmap]
 
-You start with monolingual vector spaces, the best setup so far involves the vectors from the Facebook group pretrained on Wikipedia [https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md]
+You start with monolingual vector spaces, the best setup so far involves the FastText vectors from the Facebook group pretrained on Wikipedia [https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md]
 
 Then, the monolingual vector spaces need to be aligned using the orthogonal transform, e.g.
 ```
