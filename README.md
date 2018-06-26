@@ -92,7 +92,7 @@ This is the list of embeddings for the shared Panslavonic space:
 (Ukrainian) [http://corpus.leeds.ac.uk/serge/cognates/uk-300-panslav.vec.xz]
 
 
-The lists/ directory in this github contains various dictionaries of cognates built from the shared Panslavonic space (and beyond, including Germanic, Romance and Uralic languages).  I keep the language pairs I experiment with.  If you want a  specific language pair, I can probably produce it too.  What this needs is just a corpus (of more than 50 million words) and a seed dictionary.
+The lists/ directory in this github repository contains various dictionaries of cognates built from the shared Panslavonic space (and beyond, including Germanic, Romance and Uralic languages).  I keep the language pairs I experiment with.  If you want a  specific language pair, I can probably produce it too.  What this needs is just a corpus (of more than 50 million words) and a seed dictionary.
 
 As an example, a Named-Entity Recognition (NER) tagger covering Croatian, Czech, Polish, Russian, Slovak, Slovene and Ukrainian has been built using the shared space.  It's simply a minor adaptation of a monolingual NER tagger framework [https://github.com/glample/tagger]
 
@@ -100,4 +100,4 @@ The NER tagger requires Theano and it can be run as:
 ```
 ./run-tagger.sh panslavonic input_file
 ```
-The input file can be in any language from the above list. 
+The input file can be in any language from the above list.
