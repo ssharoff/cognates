@@ -20,7 +20,7 @@ fast_align ([https://github.com/clab/fast_align]) on the
 character-separated training dictionary, see also the cost files in
 the data/ directory.
 
-For a longer description, check the paper [http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]:
+For a longer description, check the paper:
 
 ```
 @InProceedings{sharoff2018lgadapt,
@@ -31,6 +31,7 @@ For a longer description, check the paper [http://corpus.leeds.ac.uk/serge/publi
   month = {May},
   address = {Miyazaki, Japan}}
 ```
+ [http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]
 
 This work reuses methods from two experiments on building
 cross-lingual models, Dinu, et al, 2014,
