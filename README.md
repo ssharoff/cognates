@@ -31,6 +31,7 @@ For a longer description, check the paper:
   month = {May},
   address = {Miyazaki, Japan}}
 ```
+[http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]
 
 This work reuses methods from two experiments on building
 cross-lingual models, Dinu, et al, 2014,
@@ -98,6 +99,6 @@ As an example, a Named-Entity Recognition (NER) tagger covering Croatian, Czech,
 
 The NER tagger requires Theano and it can be run as:
 ```
-./run-tagger.sh panslavonic input_file
+./run-tagger.sh sl-cs input_file
 ```
-The input file can be in any language from the above list.
+for running the Czech model transferred from Slovenian.
