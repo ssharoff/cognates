@@ -20,18 +20,17 @@ fast_align ([https://github.com/clab/fast_align]) on the
 character-separated training dictionary, see also the cost files in
 the data/ directory.
 
-For a longer description, check the paper:
+For a longer description, check the paper [http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]:
 
 ```
 @InProceedings{sharoff2018lgadapt,
-  author = {Serge Sharoff},
+  author = {Serge Sharoff},;
   title = {Language adaptation experiments via cross-lingual embeddings for related languages},
   booktitle = {Proc LREC},
   year = {2018},
   month = {May},
   address = {Miyazaki, Japan}}
 ```
-[http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]
 
 This work reuses methods from two experiments on building
 cross-lingual models, Dinu, et al, 2014,
