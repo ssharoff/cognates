@@ -1,4 +1,12 @@
 #!/bin/bash
+#$ -cwd -V
+#$ -l h_rt=48:00:00
+#$ -m e
+#$ -l h_vmem=4G
+
+module add mkl
+module add python
+module add python-libs
 
 DATA='data'
 OUTPUT='out'
@@ -26,6 +34,8 @@ if [ ! -f $OUTPUT/$TRG_EMB ]; then
 fi
 
 echo "building mapping for $SRC_EMB using $TRAIN_DIC"
-#time python3 src/project_embeddings.py --orthogonal $OUTPUT/$SRC_EMB $OUTPUT/$TRG_EMB -d $DATA/$TRAIN_DIC -o $OUTPUT/$SRCTRG_EMB
+if [ ! -f $OUTPUT/$SRCTRG_EMB ]; then
+  time python3 src/project_embeddings.py --orthogonal $OUTPUT/$SRC_EMB $OUTPUT/$TRG_EMB -d $DATA/$TRAIN_DIC -o $OUTPUT/$SRCTRG_EMB
+fi
 
-echo python3 src/eval_translation1.py -1 $OUTPUT/$SRCTRG_EMB -2 $OUTPUT/$TRG_EMB -d $DATA/$TEST_DIC #>$L1-$L2.out
+python3 src/eval_translation1.py -1 $OUTPUT/$SRCTRG_EMB -2 $OUTPUT/$TRG_EMB -d $DATA/$TEST_DIC >$L1-$L2.out

@@ -1,4 +1,9 @@
-# Detection of cognates
+# Cross-lingual embeddings for related languages 
+
+An embedding space is a vector space in which words with similar
+meanings are located close to each other.  Since 2011 there have been
+a number of studies devoted to constructing cross-lingual embedding
+spaces, see an [overview](https://github.com/artetxem/vecmap).
 
 If we consider the task of dictionary induction between related
 languages, it is possible to rely on the orthographic similarity
@@ -16,7 +21,7 @@ e.g., the cost of mapping *x* in English to *s* in Italian is very
 small (*examined* vs *esaminato*).  Also this works well across
 character sets, e.g., mapping *ж* in Russian to *ż* in Polish (*жизни*
 vs *życia*).  The cost for the WLD operations are produced by running
-fast_align ([https://github.com/clab/fast_align]) on the
+[fast_align](https://github.com/clab/fast_align) on the
 character-separated training dictionary, see also the cost files in
 the data/ directory.
 
@@ -24,7 +29,7 @@ For a longer description, check the paper:
 
 ```
 @InProceedings{sharoff2018lgadapt,
-  author = {Serge Sharoff},;
+  author = {Serge Sharoff},
   title = {Language adaptation experiments via cross-lingual embeddings for related languages},
   booktitle = {Proc LREC},
   year = {2018},
@@ -44,7 +49,7 @@ Then, the monolingual vector spaces need to be aligned using the orthogonal tran
 ```
 ./align-spaces.sh en it 300-fasttext.dat
 ```
-The output is in the format of trec_eval ([http://trec.nist.gov/trec_eval/]), which makes it easy to run various evaluation metrics (note that their success@1 corresponds to precision@1 in the lexicon building community).
+The output is in the format of [trec_eval](http://trec.nist.gov/trec_eval/), which makes it easy to run various evaluation metrics (note that their success@1 corresponds to precision@1 in the lexicon building community).
 
 For cognate detection you need a word list for the source language.  As a simple approximation a word list can be taken from the existing vectors:
 ```
@@ -67,7 +72,6 @@ Once you have a list reliable cognates in `en-it.cognates', they can be used in 
 time python3 src/project_embeddings.py --orthogonal out/iten-300-fasttext.vec out/it-300-fasttext.vec -d en-it.cognates -o out/it2en-300-fasttext.vec
 ```
 
-
 # Shared Panslavonic embedding space for Language Adaptation
 
 Cognate detection is useful in the context of Language Adaptation,
@@ -76,26 +80,18 @@ used to improve NLP tasks in a lesser resourced language.
 
 This is the list of embeddings for the shared Panslavonic space:
 
-(Czech) [http://corpus.leeds.ac.uk/serge/cognates/cs-300-panslav.vec.xz]
-
-(English) [http://corpus.leeds.ac.uk/serge/cognates/en-300-panslav.vec.xz]
-
-(Croatian) [http://corpus.leeds.ac.uk/serge/cognates/hr-300-panslav.vec.xz]
-
-(Polish) [http://corpus.leeds.ac.uk/serge/cognates/pl-300-panslav.vec.xz]
-
-(Russian) [http://corpus.leeds.ac.uk/serge/cognates/ru-300-panslav.vec.xz]
-
-(Slovak) [http://corpus.leeds.ac.uk/serge/cognates/sk-300-panslav.vec.xz]
-
-(Slovene) [http://corpus.leeds.ac.uk/serge/cognates/sl-300-panslav.vec.xz]
-
-(Ukrainian) [http://corpus.leeds.ac.uk/serge/cognates/uk-300-panslav.vec.xz]
-
+* [Czech](http://corpus.leeds.ac.uk/serge/cognates/cs-300-panslav.vec.xz)
+* [English](http://corpus.leeds.ac.uk/serge/cognates/en-300-panslav.vec.xz)
+* [Croatian](http://corpus.leeds.ac.uk/serge/cognates/hr-300-panslav.vec.xz)
+* [Polish](http://corpus.leeds.ac.uk/serge/cognates/pl-300-panslav.vec.xz)
+* [Russian](http://corpus.leeds.ac.uk/serge/cognates/ru-300-panslav.vec.xz)
+* [Slovak](http://corpus.leeds.ac.uk/serge/cognates/sk-300-panslav.vec.xz)
+* [Slovene](http://corpus.leeds.ac.uk/serge/cognates/sl-300-panslav.vec.xz)
+* [Ukrainian](http://corpus.leeds.ac.uk/serge/cognates/uk-300-panslav.vec.xz)
 
 The lists/ directory in this github repository contains various dictionaries of cognates built from the shared Panslavonic space (and beyond, including Germanic, Romance and Uralic languages).  I keep the language pairs I experiment with.  If you want a  specific language pair, I can probably produce it too.  What this needs is just a corpus (of more than 50 million words) and a seed dictionary.
 
-As an example, a Named-Entity Recognition (NER) tagger covering Croatian, Czech, Polish, Russian, Slovak, Slovene and Ukrainian has been built using the shared space.  It's simply a minor adaptation of a monolingual NER tagger framework [https://github.com/glample/tagger]
+As an example, a Named-Entity Recognition (NER) tagger covering Croatian, Czech, Polish, Russian, Slovak, Slovene and Ukrainian has been built using the shared space.  It's simply an adaptation of a monolingual [NER tagger](https://github.com/glample/tagger)
 
 The NER tagger requires Theano and it can be run as:
 ```
