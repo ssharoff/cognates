@@ -24,7 +24,12 @@ def tokeniseall(s):
 gtype=sys.argv[1].lower()
 endwords=sys.argv[2].split('/')
 
-for l in sys.stdin:
+f=open(sys.argv[3]) if len(sys.argv)>3 else sys.stdin
+
+for l in f:
+    commapos=l.find(',')
+    if commapos>0:
+        l=l.strip()[commapos+2:]+' '+l[:commapos]
     wlist=tokeniseall(l).split()
     print(outbreak % (endwords[random.randrange(len(endwords))], 'O'))
     print(outformat % (wlist[0], 'B-'+gtype))

@@ -12,7 +12,7 @@ def load_sentences(path, lower, zeros):
     """
     sentences = []
     sentence = []
-    for line in codecs.open(path, 'r', 'utf8'):
+    for i,line in enumerate(codecs.open(path, 'r', 'utf8')):
         line = zero_digits(line.rstrip()) if zeros else line.rstrip()
         if not line:
             if len(sentence) > 0:
@@ -21,7 +21,7 @@ def load_sentences(path, lower, zeros):
                 sentence = []
         else:
             word = line.split()
-            assert len(word) >= 2
+            assert len(word) >= 2, 'Error in describing %s, line %d in %s' % (line, i, path)
             sentence.append(word)
     if len(sentence) > 0:
         if 'DOCSTART' not in sentence[0][0]:
@@ -163,7 +163,7 @@ def augment_with_pretrained(dictionary, ext_emb_path, words):
     `words` (typically the words in the development and test sets.)
     """
     print('Loading pretrained embeddings from %s...' % ext_emb_path)
-    assert os.path.isfile(ext_emb_path)
+    assert os.path.isfile(ext_emb_path), "File %s doesnot exist" % ext_emb_path
 
     # Load pretrained embeddings from file
     pretrained = set([
