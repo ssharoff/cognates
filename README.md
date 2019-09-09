@@ -28,44 +28,43 @@ the data/ directory.
 For a longer description, check the paper:
 
 ```
-@InProceedings{sharoff2018lgadapt,
-  author = {Serge Sharoff},
-  title = {Language adaptation experiments via cross-lingual embeddings for related languages},
-  booktitle = {Proc LREC},
-  year = {2018},
-  month = {May},
-  address = {Miyazaki, Japan}}
+@Article{sharoff19jnle,
+  author = 	 {Serge Sharoff},
+  title = 	 {Finding next of kin: Cross-lingual embedding spaces for related languages},
+  journal = 	 {Journal of Natural Language Engineering},
+  year = 	 2019,
+  volume = 	 25}
 ```
- [http://corpus.leeds.ac.uk/serge/publications/2018-lrec.pdf]
+ [http://corpus.leeds.ac.uk/serge/publications/2019-ftd.pdf]
 
 This work reuses methods from two experiments on building
 cross-lingual models, Dinu, et al, 2014,
 [http://clic.cimec.unitn.it/~georgiana.dinu/down/]
 and Artetxe, et al, 2016 [https://github.com/artetxem/vecmap]
 
-You start with monolingual vector spaces, the best setup so far involves the FastText vectors from the Facebook group pretrained on Wikipedia [https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md]
+You start with monolingual vector spaces, the best setup so far involves the FastText vectors from the Facebook group [https://github.com/facebookresearch/fastText/blob/master/pretrained-vectors.md]
 
 Then, the monolingual vector spaces need to be aligned using the orthogonal transform, e.g.
 ```
 ./align-spaces.sh en it 300-fasttext.dat
 ```
-The output is in the format of [trec_eval](http://trec.nist.gov/trec_eval/), which makes it easy to run various evaluation metrics (note that their success@1 corresponds to precision@1 in the lexicon building community).
+The output is in the format of [trec_eval](http://trec.nist.gov/trec_eval/), which makes it easy to run various evaluation metrics (note that success@1trec_eval  corresponds to precision@1 in the lexicon building community).
 
 For cognate detection you need a word list for the source language.  As a simple approximation a word list can be taken from the existing vectors:
 ```
 cut -f 1 -d ' ' out/en-300-fasttext.vec | grep '^[a-z-]*$' | perl -pe 'undef $_ if length($_)<=4' | sed 's/$/\tnone/' >en.wl
 ```
-Then run conversion for the converted vectors:
+Then run congnate detection for the aligned vectors:
 ```
 python3 src/eval_translation1.py -a 0.73 -l data/en-it.cost -1 out/iten-300-fasttext.vec -2 out/it-300-fasttext.vec -d en.wl | cut -f 1,3,5 | sort -nsrk3,3 >en-it.trans
 ```
 
-This produces a list of *possible* cognates: words at the top of the list are likely to be cognates, words at the bottom are either incorrect translations, or correct translation which are not cognates.  You need guidance to estimate the threshold for the most likely cognates.  If you have a small dictionary of gold-standard cognates, it might be useful to estimate the positions of those words in the full list:
+This produces a list of *possible* cognates: words at the top of the list are likely to be cognates, words at the bottom are either incorrect translations, or correct translation which are not cognates.  You need to estimate the threshold for the most likely cognates.  If you have a small dictionary of gold-standard cognates, it might be useful to estimate the positions of those words in the full list:
 
 ```
 grep -nFf en-it-test.dic en-it.trans
 ```
-Usually the cognates have the similarity score above 0.5, but the exact useful value depends on the language pair and the quality constraints.
+In my experience the cognates have the similarity score above 0.5, but the exact useful value depends on the language pair and the quality constraints.
 
 Once you have a list reliable cognates in `en-it.cognates', they can be used in the second round for building embedding spaces:
 ```

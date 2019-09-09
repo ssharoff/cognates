@@ -166,11 +166,20 @@ def augment_with_pretrained(dictionary, ext_emb_path, words):
     assert os.path.isfile(ext_emb_path), "File %s doesnot exist" % ext_emb_path
 
     # Load pretrained embeddings from file
-    pretrained = set([
-        line.rstrip().split()[0].strip()
-        for line in codecs.open(ext_emb_path, 'r', 'utf-8')
-        if len(ext_emb_path) > 0
-    ])
+    pretrained={}
+    for line in codecs.open(ext_emb_path, 'r', 'utf-8'):
+        try:
+            wpos=line.find(' ')
+            if wpos>0:
+                pretrained[line[:wpos]]=1
+        except:
+            print('error in line: '+line,file=sys.stderr)
+    pretrained = set(pretrained.keys())
+    #pretrained = set([
+    #    line.rstrip().split()[0].strip() if len(line)>3
+    #    for line in codecs.open(ext_emb_path, 'r', 'utf-8')
+    #    if len(ext_emb_path) > 0
+    #])
 
     # We either add every word in the pretrained file,
     # or only words given in the `words` list to which

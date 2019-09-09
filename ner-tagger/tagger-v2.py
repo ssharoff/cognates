@@ -4,6 +4,7 @@
 # For the full context see: https://github.com/ssharoff/panslavonic
 
 import os
+import sys
 import time
 import codecs
 import optparse
@@ -33,7 +34,7 @@ if os.path.isdir(opts.output):
 else:
     outflist=[opts.output]
 
-assert len(outflist) == len(flist)
+assert len(outflist) == len(flist), print('mismatch in outputs: %d out vs %d in for %s' %(len(outflist), len(flist), opts.output), file=sys.stderr)
 
 # Load existing model
 print("Loading model...")

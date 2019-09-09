@@ -4,6 +4,8 @@ import re
 import codecs
 import numpy as np
 import theano
+import time
+import datetime
 
 
 models_path = "./models"
@@ -252,9 +254,9 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
         predictions.append("")
 
     # Write predictions to disk and run CoNLL script externally
-    eval_id = np.random.randint(1000000, 2000000)
-    output_path = os.path.join(eval_temp, "eval.%i.output" % eval_id)
-    scores_path = os.path.join(eval_temp, "eval.%i.scores" % eval_id)
+    eval_id = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H-%M-%S.')+parameters['wl'] # np.random.randint(1000000, 2000000)
+    output_path = os.path.join(eval_temp, "eval.%s.output" % eval_id)
+    scores_path = os.path.join(eval_temp, "eval.%s.scores" % eval_id)
     with codecs.open(output_path, 'w', 'utf8') as f:
         f.write("\n".join(predictions))
     os.system("%s < %s > %s" % (eval_script, output_path, scores_path))

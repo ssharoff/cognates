@@ -55,6 +55,7 @@ parameters['cap_dim'] = opts.cap_dim
 parameters['crf'] = opts.crf == 1
 parameters['dropout'] = opts.dropout
 parameters['lr_method'] = opts.lr_method
+parameters['wl'] = opts.wordlist
 
 # Check parameters validity
 assert os.path.isfile(opts.train)
@@ -149,7 +150,7 @@ if opts.reload:
 #
 singletons = set([word_to_id[k] for k, v
                   in dico_words_train.items() if v == 1])
-n_epochs = 100  # number of epochs over the training set
+n_epochs = 50  # number of epochs over the training set
 freq_eval = 10000  # evaluate on dev every freq_eval steps
 best_dev = -np.inf
 best_test = -np.inf
