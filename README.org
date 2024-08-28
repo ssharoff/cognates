@@ -74,7 +74,7 @@ For cognate detection you need a word list for the source language. As a
 simple approximation a word list can be taken from the existing vectors:
 
 #+begin_example
-cut -f 1 -d ' ' out/en-300-fasttext.vec | grep '^[a-z-]*$' | perl -pe 'undef $_ if length($_)<=4' | sed 's/$/\tnone/' >en.wl
+cut -f 1 -d ' ' out/en-300-fasttext.vec | awk '/^[a-z-]+$/ && length($1)>4' | sed 's/$/\tnone/' >en.wl
 #+end_example
 
 Then run congnate detection for the aligned vectors:
@@ -98,12 +98,13 @@ In my experience the cognates have the similarity score above 0.5, but
 the exact useful value depends on the language pair and the quality
 constraints.
 
-Once you have a list reliable cognates in `en-it.cognates', they can be
-used in the second round for building embedding spaces:
+Once you have a list of reliable cognates (e.g., stored in `en-it.cognates'), they can be used in the second iteration for building embedding spaces:
 
 #+begin_example
 time python3 src/project_embeddings.py --orthogonal out/iten-300-fasttext.vec out/it-300-fasttext.vec -d en-it.cognates -o out/it2en-300-fasttext.vec
 #+end_example
+
+In my experience having more than one iteration does not improve the embedding space quality, as most of the reliable cognates have been already hoovered into the anchors.
 
 * Shared Panslavonic embedding space for Language Adaptation
 
