@@ -1,0 +1,151 @@
+* Cross-lingual embeddings for related languages
+An embedding space is a vector space in which words with similar
+meanings are located close to each other. Since 2011 there have been a
+number of studies devoted to constructing cross-lingual embedding
+spaces from comparable corpora, see an [[https://ssharoff.github.io/publications/2023-bucc-intro.pdf][overview]] in our recent book:
+#+begin_example
+@Book{sharoff23bucc,
+  author    = {Sharoff, Serge and  Rapp, Reinhard and Zweigenbaum, Pierre},
+  title = 	 {Building and Using Comparable Corpora for Multilingual Natural Language Processing},
+  publisher = 	 {Springer Nature},
+  year = 	 2023,
+  series = 	 {Synthesis Lectures on Human Language Technologies},
+  url = {https://link.springer.com/book/9783031313837}
+  }
+#+end_example
+
+If we consider the task of dictionary induction between related
+languages, it is possible to rely on the orthographic similarity between
+the two words, for example, /academy/ in English vs /accademia/ in
+Italian. This set of tools extends the existing experiments on
+cross-lingual word embeddings without using parallel resources by
+considering Weighted Levenshtein Distance, where the distance in the
+cross-lingual embedding space is weighted by how similar the words are
+using weights for the Levenshtein edit operations. The weights are also
+learned from the training dictionary.
+
+The advantage of using weights instead of the standard Levenshtein
+Distance is that this decreases the cost of *likely* substitutions,
+e.g., the cost of mapping /x/ in English to /s/ in Italian is very small
+(/examined/ vs /esaminato/). Also this works well across character sets,
+e.g., mapping /ж/ in Russian to /ż/ in Polish (/жизни/ vs /życia/). The
+cost for the WLD operations are produced by running
+[[https://github.com/clab/fast_align][fast_align]] on the
+character-separated training dictionary, see also the cost files in the
+data/ directory.
+
+For a longer description, check the paper:
+
+#+begin_example
+@Article{sharoff2020jnle,
+  author =   {Serge Sharoff},
+  title =    {Finding next of kin: Cross-lingual embedding spaces for related languages},
+  journal =      {Journal of Natural Language Engineering},
+  year =     2020,
+  volume =   25}
+#+end_example
+
+https://ssharoff.github.io/publications/2020-jnle-journal.pdf
+
+This work reuses methods from two experiments on building cross-lingual
+models, Dinu, et al, 2014,
+https://arxiv.org/pdf/1412.6568
+
+and Artetxe, et al, 2016
+[[https://github.com/artetxem/vecmap]]
+
+You start with monolingual vector spaces, the best setup so far involves
+the FastText vectors from the Facebook group
+https://github.com/facebookresearch/fastText/
+
+Then, the monolingual vector spaces need to be aligned using the
+orthogonal transform, e.g.
+
+#+begin_example
+./align-spaces.sh en it 300-fasttext.dat
+#+end_example
+
+The output is in the format of
+[[http://trec.nist.gov/trec_eval/][trec_eval]], which makes it easy to
+run various evaluation metrics (note that success@1trec_eval corresponds
+to precision@1 in the lexicon building community).
+
+For cognate detection you need a word list for the source language. As a
+simple approximation a word list can be taken from the existing vectors:
+
+#+begin_example
+cut -f 1 -d ' ' out/en-300-fasttext.vec | grep '^[a-z-]*$' | perl -pe 'undef $_ if length($_)<=4' | sed 's/$/\tnone/' >en.wl
+#+end_example
+
+Then run congnate detection for the aligned vectors:
+
+#+begin_example
+python3 src/eval_translation1.py -a 0.73 -l data/en-it.cost -1 out/iten-300-fasttext.vec -2 out/it-300-fasttext.vec -d en.wl | cut -f 1,3,5 | sort -nsrk3,3 >en-it.trans
+#+end_example
+
+This produces a list of /possible/ cognates: words at the top of the
+list are likely to be cognates, words at the bottom are either incorrect
+translations, or correct translation which are not cognates. You need to
+estimate the threshold for the most likely cognates. If you have a small
+dictionary of gold-standard cognates, it might be useful to estimate the
+positions of those words in the full list:
+
+#+begin_example
+grep -nFf en-it-test.dic en-it.trans
+#+end_example
+
+In my experience the cognates have the similarity score above 0.5, but
+the exact useful value depends on the language pair and the quality
+constraints.
+
+Once you have a list reliable cognates in `en-it.cognates', they can be
+used in the second round for building embedding spaces:
+
+#+begin_example
+time python3 src/project_embeddings.py --orthogonal out/iten-300-fasttext.vec out/it-300-fasttext.vec -d en-it.cognates -o out/it2en-300-fasttext.vec
+#+end_example
+
+* Shared Panslavonic embedding space for Language Adaptation
+
+Cognate detection is useful in the context of Language Adaptation, when
+an embedding space is shared across related languages and can be used to
+improve NLP tasks in a lesser resourced language.
+
+This is the list of embeddings for the shared Panslavonic space:
+
+- [[embeddings/cs-300-panslav.vec.xz][Czech]]
+- [[embeddings/en-300-panslav.vec.xz][English]]
+- [[embeddings/hr-300-panslav.vec.xz][Croatian]]
+- [[embeddings/pl-300-panslav.vec.xz][Polish]]
+- [[embeddings/ru-300-panslav.vec.xz][Russian]]
+- [[embeddings/sk-300-panslav.vec.xz][Slovak]]
+- [[embeddings/sl-300-panslav.vec.xz][Slovene]]
+- [[embeddings/uk-300-panslav.vec.xz][Ukrainian]]
+
+The same for the Panromance space:
+- [[embeddings/en-300-panrom.vec.xz][English]]
+- [[embeddings/ca-300-panrom.vec.xz][Catalan]]
+- [[embeddings/es-300-panrom.vec.xz][Spanish]]
+- [[embeddings/fr-300-panrom.vec.xz][French]]
+- [[embeddings/it-300-panrom.vec.xz][Italian]]
+- [[embeddings/ro-300-panrom.vec.xz][Romanian]]
+
+The lists/ directory in this github repository contains various
+dictionaries of cognates built from the shared Panslavonic space (and
+beyond, including Germanic, Romance and Uralic languages). I keep the
+language pairs I experiment with. If you want a specific language pair,
+I can probably produce it too. What this needs is just a corpus (of more
+than 50 million words) and a seed dictionary.
+
+As an example, a Named-Entity Recognition (NER) tagger covering
+Croatian, Czech, Polish, Russian, Slovak, Slovene and Ukrainian has been
+built using the shared space. It's simply an adaptation of a monolingual
+[[https://github.com/glample/tagger][NER tagger]]
+
+The NER tagger requires Theano and it can be run as:
+
+#+begin_example
+./run-tagger.sh sl-cs input_file
+#+end_example
+
+for running the Czech model transferred from Slovenian.
